@@ -32,7 +32,7 @@ X_train["Fare"].hist(bins = 30)
 plt.show()
 
 
-#  First model
+# Random Forest
 features_dummy = ["Pclass", "Sex", "SibSp", "Parch"]
 X_train_dummy = pd.get_dummies(X_train[features_dummy])
 X_test_dummy = pd.get_dummies(X_test[features_dummy])
@@ -47,5 +47,25 @@ output = pd.DataFrame({'PassengerId': X_test.PassengerId, 'Survived': y_pred})
 output.head()
 
 accuracy_score(y_pred, y_test)
+
+#  Logistic Regression
+from sklearn.linear_model import LogisticRegressionCV
+
+
+model = LogisticRegressionCV(cv = 4, random_state = 42)
+model.fit(X_test_dummy, y_test)
+
+y_train_pred = model.predict(X_train_dummy)
+train_acc = accuracy_score(y_train_pred, y_train)
+
+y_pred = model.predict(X_test_dummy)
+test_acc = accuracy_score(y_pred, y_test)
+
+print("Logistic regression train acc = ", train_acc)
+print("Logistic regression test acc = ", test_acc)
+
+output = pd.DataFrame({'PassengerId': X_test.PassengerId, 'Survived pred': y_pred, 'Survived': y_test})
+output.head(10)
+
 
 
